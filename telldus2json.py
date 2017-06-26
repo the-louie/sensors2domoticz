@@ -88,6 +88,7 @@ def get_sensor_values(sensors, my_sensors, specific_sensor=None):
         result.append({
             "id": sensor.id,
             "idx": my_sensors[sensor.id]["idx"],
+            "type": "Temp + Humidity",
             "temperature": sensor.value(tdconst.TELLSTICK_TEMPERATURE).value,
             "humidity": sensor.value(tdconst.TELLSTICK_HUMIDITY).value,
             "name": my_sensors[sensor.id]["name"],

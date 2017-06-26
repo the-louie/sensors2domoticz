@@ -44,12 +44,22 @@ requests.packages.urllib3.disable_warnings(SNIMissingWarning)
 requests.packages.urllib3.disable_warnings(InsecurePlatformWarning)
 
 
-
 for line in sys.stdin:
     try:
         for sensor in json.loads(line):
+            print "sensor", sensor
+            if sensor.get("type") not in config["domoticz_urls"]:
+                print "unknown type", sensor.get("type")
+                continue
+            print "sensor type", sensor.get("type"), config["domoticz_urls"][sensor["type"]]
+            # url = (config["domoticz_host"] +
+            #        config["domoticz_urls"][sensor.get("type")]
+            #       ).format(**sensor)
+            # print "url", url
             result = requests.get(
-                config["domoticz_host"] + config["domoticz_url"].format(**sensor),
+                (config["domoticz_host"] +
+                 config["domoticz_urls"][sensor.get("type")]
+                ).format(**sensor),
                 auth=("tellstick", "tellstick"),
                 verify=False)
             rjson = result.json()
@@ -59,4 +69,4 @@ for line in sys.stdin:
             else:
                 print "SUCCESSFULLY UPDATED {}".format(sensor["name"])
     except Exception as message:
-        print message
+        print "Exception", message.__class__.__name__, message
